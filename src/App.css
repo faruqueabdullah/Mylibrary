@@ -1,0 +1,38 @@
+@import "tailwindcss";
+/* global font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body{
+  font-family: "Inter", sans-serif;
+}
+
+@theme {
+  --color-main-bg: #2a3447; 
+  --color-dark-bg: #222b3c; 
+  --color-soft-bg: #f2f1ef;
+
+  --color-main-color: white;
+  --color-dark-color: #2a3447;
+  --color-soft-color: #ddd;
+}
+
+@layer utilities {
+  /* For WebKit browsers (Chrome, Safari, Opera) */
+  .scrollbar::-webkit-scrollbar {
+    width: 3px; /* Width of the vertical scrollbar */
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the thumb on hover */
+  }
+}
