@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import AuthContext from "./Context/AuthContext.jsx";
+import Firebaseprovider from "./Context/Firebaseprovider.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <AuthContext>
+  <Firebaseprovider>
     <App />
-  </AuthContext>,
+  </Firebaseprovider>,
 );

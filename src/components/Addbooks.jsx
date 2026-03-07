@@ -52,6 +52,8 @@ export default function Addbooks({ setAddClick }) {
       availableCopies: formData.totalCopies,
     };
 
+    // adding books to firestore
+
     setDoc(doc(db, "books", bookId), newBook)
       .then(() => {
         setFormData({

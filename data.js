@@ -20,7 +20,7 @@ export const menu = [
       {
         id: 4,
         title: "Check-out books",
-        url: "/books/checkout",
+        url: "/app/checkouts",
         icon: "checkout.png",
       },
       {
@@ -37,7 +37,7 @@ export const menu = [
       },
 ]
 
-export const members = [
+export const membersArray = [
   {
     id: "LIB-M-1001",
     name: "Faruque Ahmad",
@@ -206,7 +206,7 @@ export const members = [
 ];
 
 
-export const books = [
+export const booksArray = [
   {
     id: "BOOK-001",
     title: "The Discovery of India",

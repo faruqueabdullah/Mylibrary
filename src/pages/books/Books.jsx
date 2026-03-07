@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { books } from "../../../data";
+import { useEffect, useState } from "react";
+import { booksArray } from "../../../data";
 import Table from "../../components/Table";
 import Addbooks from "../../components/Addbooks";
+import Issue from "../../components/Issue";
+import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 
 export default function Books() {
   const columns = [
@@ -54,14 +56,19 @@ export default function Books() {
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 300,
-      renderCell: () => {
-        // console.log(params)
+      renderCell: (params) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
             <button className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center">
-              Edit
+              Delete
             </button>
-            <button className="rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center">
+            <button
+              onClick={() => {
+                setIssueBtnClicked(true);
+                setBookDetails(params.row);
+              }}
+              className="rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center"
+            >
               Issue
             </button>
           </div>
@@ -73,20 +80,36 @@ export default function Books() {
   const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [books, setBooks] = useState(booksArray);
+  const [issueBtnClicked, setIssueBtnClicked] = useState(false);
+  const [bookDetails, setBookDetails] = useState([]);
+
+  const {fetchingData} = UseFirebaseContext()
+
+  // getting books from database
+   useEffect(()=>{
+    const unsubscribe = fetchingData("books",(data)=>{
+      setBooks(data)
+    })
+
+    return ()=>unsubscribe()
+  },[])
+
+  // console.log(books);
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
     tableRows(e.target.value.trim());
   }
 
-  //filter table row
+  //filter books by title, isbn, author, category
   function tableRows(value) {
-    const rowData = books.filter((data) =>
-      data.title.toLowerCase().includes(value.toLowerCase())||
-      data.isbn.toLowerCase().includes(value.toLowerCase()) ||
-      data.author.toLowerCase().includes(value.toLowerCase()) ||
-      data.category.toLowerCase().includes(value.toLowerCase()),
-        
+    const rowData = books.filter(
+      (data) =>
+        data.title.toLowerCase().includes(value.toLowerCase()) ||
+        data.isbn.toLowerCase().includes(value.toLowerCase()) ||
+        data.author.toLowerCase().includes(value.toLowerCase()) ||
+        data.category.toLowerCase().includes(value.toLowerCase()),
     );
     setRows(rowData);
   }
@@ -121,6 +144,7 @@ export default function Books() {
       </div>
       <Table columns={columns} rows={rows.length === 0 ? books : rows} />
       {addClick && <Addbooks setAddClick={setAddClick} />}
+      {issueBtnClicked && <Issue setIssueBtnClicked={setIssueBtnClicked} bookDetails={bookDetails}/>}
     </>
   );
 }

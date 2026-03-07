@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { members } from "../../../data";
+import { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import Addmember from "../../components/Addmember";
+import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 
 export default function Members() {
   const columns = [
@@ -46,6 +46,17 @@ export default function Members() {
   const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [members, setMembers] = useState([])
+
+  const {fetchingData} = UseFirebaseContext();
+  
+  useEffect(()=>{
+    const unsubscribe = fetchingData("members",(data)=>{
+      setMembers(data)
+    })
+
+    return ()=>unsubscribe()
+  },[])
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
