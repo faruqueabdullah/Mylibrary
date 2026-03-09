@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Table from "../../components/Table";
 import Addmember from "../../components/Addmember";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
@@ -46,17 +46,8 @@ export default function Members() {
   const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [members, setMembers] = useState([])
 
-  const {fetchingData} = UseFirebaseContext();
-  
-  useEffect(()=>{
-    const unsubscribe = fetchingData("members",(data)=>{
-      setMembers(data)
-    })
-
-    return ()=>unsubscribe()
-  },[])
+  const {members} = UseFirebaseContext();
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
@@ -65,7 +56,7 @@ export default function Members() {
 
   //filter table row
   function tableRows(value) {
-    const rowData = members.filter(
+    const rowData = members?.filter(
       (data) =>
         data.name.toLowerCase().includes(value.toLowerCase()) ||
         data.id.toLowerCase().includes(value.toLowerCase()) ||

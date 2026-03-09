@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { booksArray } from "../../../data";
+import { useState } from "react";
 import Table from "../../components/Table";
 import Addbooks from "../../components/Addbooks";
 import Issue from "../../components/Issue";
@@ -80,22 +79,11 @@ export default function Books() {
   const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [books, setBooks] = useState(booksArray);
   const [issueBtnClicked, setIssueBtnClicked] = useState(false);
   const [bookDetails, setBookDetails] = useState([]);
 
-  const {fetchingData} = UseFirebaseContext()
+  const {books} = UseFirebaseContext() // getting books from context
 
-  // getting books from database
-   useEffect(()=>{
-    const unsubscribe = fetchingData("books",(data)=>{
-      setBooks(data)
-    })
-
-    return ()=>unsubscribe()
-  },[])
-
-  // console.log(books);
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
@@ -104,7 +92,7 @@ export default function Books() {
 
   //filter books by title, isbn, author, category
   function tableRows(value) {
-    const rowData = books.filter(
+    const rowData = books?.filter(
       (data) =>
         data.title.toLowerCase().includes(value.toLowerCase()) ||
         data.isbn.toLowerCase().includes(value.toLowerCase()) ||
