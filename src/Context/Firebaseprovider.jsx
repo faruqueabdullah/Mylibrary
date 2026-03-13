@@ -8,6 +8,7 @@ export const UseFirebaseContext = () => useContext(FirebaseContext);
 export default function Firebaseprovider({ children }) {
   const [members, setMembers] = useState([]);
   const [books, setBooks] = useState([]);
+  const [checkOuts, setCheckOuts] = useState([]);
 
   // fetching books and members from database
 
@@ -25,10 +26,12 @@ export default function Firebaseprovider({ children }) {
   useEffect(() => {
     const unsubscribeMembers = fetchCollections("members", setMembers);
     const unsubscribeBooks = fetchCollections("books", setBooks);
+    const unsubscribeCheckOut = fetchCollections("checkouts", setCheckOuts)
 
     return () => {
       unsubscribeMembers();
       unsubscribeBooks();
+      unsubscribeCheckOut();
     };
   }, []);
 
@@ -37,6 +40,7 @@ export default function Firebaseprovider({ children }) {
       value={{
         members,
         books,
+        checkOuts
       }}
     >
       {children}

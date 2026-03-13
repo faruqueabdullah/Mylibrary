@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Form from "./Form";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { addBooks } from "./firebaseServices";
 
 export default function Addbooks({ setAddClick }) {
   const [formData, setFormData] = useState({
@@ -53,22 +52,15 @@ export default function Addbooks({ setAddClick }) {
     };
 
     // adding books to firestore
+    addBooks(bookId, newBook);
 
-    setDoc(doc(db, "books", bookId), newBook)
-      .then(() => {
-        setFormData({
-          title: "",
-          author: "",
-          isbn: "",
-          category: "",
-          totalCopies: "",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    console.log("Form submitted succefully");
+    setFormData({
+      title: "",
+      author: "",
+      isbn: "",
+      category: "",
+      totalCopies: "",
+    });
   }
 
   const formLabels = [

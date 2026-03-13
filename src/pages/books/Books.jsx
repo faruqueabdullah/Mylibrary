@@ -76,31 +76,25 @@ export default function Books() {
     },
   ];
 
-  const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [issueBtnClicked, setIssueBtnClicked] = useState(false);
   const [bookDetails, setBookDetails] = useState([]);
 
-  const {books} = UseFirebaseContext() // getting books from context
-
+  const { books } = UseFirebaseContext(); // getting books from context
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
-    tableRows(e.target.value.trim());
   }
 
   //filter books by title, isbn, author, category
-  function tableRows(value) {
-    const rowData = books?.filter(
+ const rowData = books?.filter(
       (data) =>
-        data.title.toLowerCase().includes(value.toLowerCase()) ||
-        data.isbn.toLowerCase().includes(value.toLowerCase()) ||
-        data.author.toLowerCase().includes(value.toLowerCase()) ||
-        data.category.toLowerCase().includes(value.toLowerCase()),
+        data.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+        data.isbn.toLowerCase().includes(inputValue.toLowerCase()) ||
+        data.author.toLowerCase().includes(inputValue.toLowerCase()) ||
+        data.category.toLowerCase().includes(inputValue.toLowerCase()),
     );
-    setRows(rowData);
-  }
 
   return (
     <>
@@ -130,9 +124,14 @@ export default function Books() {
           </button>
         </div>
       </div>
-      <Table columns={columns} rows={rows.length === 0 ? books : rows} />
+      <Table columns={columns} rows={rowData} />
       {addClick && <Addbooks setAddClick={setAddClick} />}
-      {issueBtnClicked && <Issue setIssueBtnClicked={setIssueBtnClicked} bookDetails={bookDetails}/>}
+      {issueBtnClicked && (
+        <Issue
+          setIssueBtnClicked={setIssueBtnClicked}
+          bookDetails={bookDetails}
+        />
+      )}
     </>
   );
 }

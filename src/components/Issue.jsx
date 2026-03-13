@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UseFirebaseContext } from "../Context/Firebaseprovider";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export default function Issue({ setIssueBtnClicked, bookDetails }) {
@@ -9,10 +9,10 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
   const [memberType, setMemberType] = useState("");
   const [dueDate, setDuedate] = useState("");
 
-  const { id, title, author, isbn } = bookDetails;
-  const labels = { id, title, author, isbn };
+  const { id:bookId, title, author, isbn } = bookDetails;
+  const labels = { bookId, title, author, isbn };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedMember || !memberType || !dueDate) return; // simple check to avoid empty inputs
@@ -22,7 +22,6 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
     ); // getting memberId
 
     const issueBook = {
-      bookId: id,
       title,
       author,
       isbn,
@@ -35,17 +34,22 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
       status: "borrowed",
     };
 
-    setDoc(doc(db, "checkouts", id), issueBook)
+    setDoc(doc(db, "checkouts", bookId), issueBook)
       .then(() => {
-        setDuedate("")
-        setMemberType("")
-        setSelectedMember("")
-        setIssueBtnClicked(false)
+        setDuedate("");
+        setMemberType("");
+        setSelectedMember("");
+        setIssueBtnClicked(false);
       })
       .catch((error) => alert(error));
+
+    // Reduce available copies
+    const bookRef = doc(db, "books", bookId);
+    await updateDoc(bookRef, {
+      availableCopies: bookDetails.availableCopies - 1,
+    });
   };
 
-  console.log()
   return (
     <div className="absolute left-0 top-0 w-full h-full bg-[#000000e1] flex justify-center items-center">
       <form
@@ -134,7 +138,10 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
           </div>
         </div>
 
-        <button className="bg-green-400 p-3 my-3 rounded-sm w-full">
+        <button
+          disabled={(bookDetails.availableCopies === 0 ? true : false)}
+          className="bg-green-400 p-3 my-3 rounded-sm w-full"
+        >
           Issue Book
         </button>
       </form>
