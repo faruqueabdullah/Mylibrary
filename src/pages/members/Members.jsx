@@ -2,23 +2,30 @@ import { useState } from "react";
 import Table from "../../components/Table";
 import Addmember from "../../components/Addmember";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
+import { deleteMember } from "../../components/firebaseServices";
 
 export default function Members() {
   const columns = [
     { field: "id", headerName: "Member ID", width: 100 },
-    { field: "registerId", headerName: "Register ID", width: 100 },
     {
       field: "name",
       headerName: "Member",
       type: "text",
-      width: 250,
+      width: 150,
       editable: true,
     },
     {
       field: "email",
       headerName: "Email ID",
       type: "text",
-      width: 250,
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "phone",
+      headerName: "Mobile Number",
+      type: "tel",
+      width: 200,
       editable: true,
     },
     {
@@ -26,16 +33,16 @@ export default function Members() {
       headerName: "Action",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 300,
-      renderCell: () => {
+      width: 150,
+      renderCell: (params) => {
         // console.log(params)
         return (
-          <div className="actions flex items-center gap-2 h-full">
-            <button className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center">
-              Edit
-            </button>
-            <button className="rounded-xl w-30 h-10 bg-red-400 flex items-center justify-center">
-              Cancel
+          <div className="actions flex items-center h-full">
+            <button
+              onClick={() => deleteMember(params.id)}
+              className="rounded-xl w-30 h-9 cursor-pointer bg-red-400 flex items-center justify-center"
+            >
+              Delete
             </button>
           </div>
         );
@@ -43,27 +50,22 @@ export default function Members() {
     },
   ];
 
-  const [rows, setRows] = useState([]);
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const {members} = UseFirebaseContext();
+  const { members } = UseFirebaseContext(); // getting members from firebase context
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
-    tableRows(e.target.value.trim());
   }
 
   //filter table row
-  function tableRows(value) {
-    const rowData = members?.filter(
-      (data) =>
-        data.name.toLowerCase().includes(value.toLowerCase()) ||
-        data.id.toLowerCase().includes(value.toLowerCase()) ||
-        data.email.toLowerCase().includes(value.toLowerCase()),
-    );
-    setRows(rowData);
-  }
+  const rowData = members?.filter(
+    (data) =>
+      data.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data.id.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data.email.toLowerCase().includes(inputValue.toLowerCase()),
+  );
 
   return (
     <div>
@@ -93,7 +95,7 @@ export default function Members() {
           </button>
         </div>
       </div>
-      <Table columns={columns} rows={rows.length === 0 ? members : rows} />
+      <Table columns={columns} rows={rowData} />
       {addClick && <Addmember setAddClick={setAddClick} />}
     </div>
   );

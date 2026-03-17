@@ -3,6 +3,7 @@ import Table from "../../components/Table";
 import Addbooks from "../../components/Addbooks";
 import Issue from "../../components/Issue";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
+import { deleteBook } from "../../components/firebaseServices";
 
 export default function Books() {
   const columns = [
@@ -58,7 +59,7 @@ export default function Books() {
       renderCell: (params) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
-            <button className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center">
+            <button onClick={()=>deleteBook(params.id)} className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center">
               Delete
             </button>
             <button

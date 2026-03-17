@@ -47,8 +47,8 @@ export default function Addbooks({ setAddClick }) {
       author: formData.author,
       isbn: formData.isbn,
       category: formData.category,
-      totalCopies: formData.totalCopies,
-      availableCopies: formData.totalCopies,
+      totalCopies: Number(formData.totalCopies),
+      availableCopies: Number(formData.totalCopies),
     };
 
     // adding books to firestore

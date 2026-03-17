@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { UseFirebaseContext } from "../Context/Firebaseprovider";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export default function Issue({ setIssueBtnClicked, bookDetails }) {
   const { members } = UseFirebaseContext();
   const [selectedMember, setSelectedMember] = useState("");
-  const [memberType, setMemberType] = useState("");
   const [dueDate, setDuedate] = useState("");
 
-  const { id:bookId, title, author, isbn } = bookDetails;
+  const { id: bookId, title, author, isbn } = bookDetails;
   const labels = { bookId, title, author, isbn };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!selectedMember || !memberType || !dueDate) return; // simple check to avoid empty inputs
+    if (!selectedMember || !dueDate) return; // simple check to avoid empty inputs
 
     const [{ id: memberId }] = members.filter(
       (member) => member.name === selectedMember,
@@ -25,19 +24,22 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
       title,
       author,
       isbn,
+      bookId,
       memberId,
       member: selectedMember,
-      memberType,
       issueDate: new Date().toLocaleDateString(),
       dueDate: new Date(dueDate).toLocaleDateString("en-GB"),
       returnDate: null,
+      renewCount:0,
       status: "borrowed",
+      history:[
+        {status:"borrowed", date:new Date().toLocaleDateString(),}
+      ]
     };
 
-    setDoc(doc(db, "checkouts", bookId), issueBook)
+    addDoc(collection(db, "checkouts"), issueBook)
       .then(() => {
         setDuedate("");
-        setMemberType("");
         setSelectedMember("");
         setIssueBtnClicked(false);
       })
@@ -46,7 +48,9 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
     // Reduce available copies
     const bookRef = doc(db, "books", bookId);
     await updateDoc(bookRef, {
-      availableCopies: bookDetails.availableCopies - 1,
+      availableCopies:
+        bookDetails.availableCopies > 0 &&
+        Number(bookDetails.availableCopies) - 1,
     });
   };
 
@@ -87,25 +91,6 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="user-type" className="w-32">
-              Member type
-            </label>
-            <select
-              id="user-type"
-              name="user-type"
-              className="border p-2 w-full"
-              value={memberType}
-              onChange={(e) => setMemberType(e.target.value)}
-            >
-              <option disabled selected>
-                Select member type
-              </option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="guest">Guest</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
             <label htmlFor="due-date" className="w-32">
               Due date
             </label>
@@ -139,7 +124,7 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
         </div>
 
         <button
-          disabled={(bookDetails.availableCopies === 0 ? true : false)}
+          disabled={bookDetails.availableCopies === 0 ? true : false}
           className="bg-green-400 p-3 my-3 rounded-sm w-full"
         >
           Issue Book
