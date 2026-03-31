@@ -7,10 +7,10 @@ export default function Global() {
     <div className="global bg-main-color text-dark-bg">
         <Navbar />
         <div className="bodyContainer flex">
-          <div className="menuContainer w-64 h-[calc(100vh-81px)] border-r border-r-soft-bg p-5">
+          <div className="menuContainer max-w-64 h-[calc(100vh-81px)] border-r border-r-soft-bg p-3">
             <Menu />
           </div>
-          <div className="contentContainer bg-soft-bg w-full h-[calc(100vh-81px)] p-5 overflow-y-scroll scrollbar">
+          <div className="contentContainer bg-soft-bg w-full h-[calc(100vh-81px)] p-3 overflow-y-scroll scrollbar">
             <Outlet />
           </div>
         </div>

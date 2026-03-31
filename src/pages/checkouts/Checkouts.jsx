@@ -3,52 +3,11 @@ import Table from "../../components/Table";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 import { doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import { checkoutsArray } from "../../../data";
 
 export default function Checkouts() {
   const columns = [
-    { field: "memberId", headerName: "Member ID", width: 100 },
-    {
-      field: "member",
-      headerName: "Member",
-      type: "text",
-      width: 120,
-      editable: false,
-    },
-    {
-      field: "title",
-      headerName: "Title",
-      type: "text",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "author",
-      headerName: "Author",
-      type: "text",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "issueDate",
-      headerName: "Borrowed Date",
-      type: "text",
-      width: 120,
-      editable: false,
-    },
-    {
-      field: "dueDate",
-      headerName: "Due Date",
-      type: "text",
-      width: 120,
-      editable: false,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      type: "text",
-      width: 100,
-      editable: false,
-    },
+    ...checkoutsArray,
     {
       field: "action",
       headerName: "Action",
@@ -70,12 +29,21 @@ export default function Checkouts() {
             <button
               disabled={param.row.status === "returned" ? true : false}
               onClick={() => {
-                setOpen(true);
+                setOpen((prev) => ({ ...prev, renewBox: true }));
                 setSelectedCheckout(param.row);
               }}
               className={`rounded-xl w-30 h-10 ${param.row.status === "returned" ? "bg-red-300" : "bg-red-400"} flex items-center justify-center `}
             >
               renew
+            </button>
+            <button
+              onClick={() => {
+                setOpen((prev) => ({ ...prev, historyBox: true }));
+                setSelectedCheckout(param.row);
+              }}
+              className={`rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center `}
+            >
+              History
             </button>
           </div>
         );
@@ -86,14 +54,9 @@ export default function Checkouts() {
   const { checkOuts } = UseFirebaseContext(); // fetching checkOuts details
 
   const [inputValue, setInputValue] = useState("");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({ renewBox: false, historyBox: false });
   const [newDueDate, setNewdueDate] = useState("");
   const [selectedCheckout, setSelectedCheckout] = useState(null);
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    setInputValue(e.target.value);
-  };
 
   const filterRow = checkOuts.filter(
     (book) =>
@@ -107,7 +70,7 @@ export default function Checkouts() {
   const returnedBook = async (book) => {
     const bookRef = doc(db, "books", book.bookId);
     await updateDoc(bookRef, {
-      availableCopies: increment(1),
+      availableCopies: increment(1), // if the book is available increase count but if the book is not available add the book in the book component
     });
 
     const bookRef2 = doc(db, "checkouts", book.id);
@@ -115,7 +78,7 @@ export default function Checkouts() {
       status: "returned",
       history: [
         ...book.history,
-        { status: "returned", date: new Date().toLocaleDateString("en-GB") },
+        { status: "returned", date: new Date().toISOString() },
       ],
     });
   };
@@ -128,17 +91,17 @@ export default function Checkouts() {
     await updateDoc(bookRef, {
       status: "renewed",
       renewCount: selectedCheckout.renewCount <= 2 && increment(1),
-      dueDate: new Date(newDueDate).toLocaleDateString("en-GB"),
+      dueDate: new Date(newDueDate).toISOString(),
       history: [
         ...selectedCheckout.history,
         {
           status: "renewed",
-          dueDate: new Date(newDueDate).toLocaleDateString("en-GB"),
+          date: new Date(newDueDate).toISOString(),
         },
         selectedCheckout.status === "returned"
           ? {
               status: "returned",
-              returnDate: new Date().toLocaleDateString("en-GB"),
+              date: new Date().toISOString(),
             }
           : null,
       ],
@@ -164,15 +127,16 @@ export default function Checkouts() {
               className="border-0 outline-0"
               placeholder="search by id, member, book, author"
               value={inputValue}
-              onChange={handleChange}
+              onChange={(e) => setInputValue(e.target.value)}
             />
             <img src="../../search.png" alt="search" className="w-7" />
           </div>
         </div>
       </div>
       <Table columns={columns} rows={filterRow} />
+
       {/* Renew Box */}
-      {open && (
+      {open.renewBox && (
         <div className="flex justify-center items-center w-full h-full bg-gray-200/90 absolute left-0 top-0">
           <div className="w-80 border rounded-xl p-3 bg-white">
             <h3 className="text-2xl text-center pb-3">Renew Book</h3>{" "}
@@ -211,14 +175,16 @@ export default function Checkouts() {
                     return;
                   }
                   handleRenew();
-                  setOpen(false);
+                  setOpen((prev) => ({ ...prev, renewBox: false }));
                 }}
               >
                 Confirm
               </button>
               <button
                 className="border w-full bg-red-400 rounded p-1"
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setOpen((prev) => ({ ...prev, renewBox: false }))
+                }
               >
                 cancel
               </button>
@@ -230,6 +196,33 @@ export default function Checkouts() {
             ) : (
               ""
             )}
+          </div>
+        </div>
+      )}
+
+      {/* History Box */}
+      {open.historyBox && (
+        <div className="flex justify-center items-center w-full h-full bg-gray-200/90 absolute left-0 top-0">
+          <div className="w-150 border rounded-xl p-3 bg-white">
+            <h3 className="text-2xl text-center pb-3">Checkout History</h3>{" "}
+            {selectedCheckout?.history.map((history) => {
+              return (
+                <div className="flex gap-5 justify-center items-center">
+                  <p>{history.status}</p>
+                  <p>{new Date(history.date).toLocaleDateString("en-GB")}</p>
+                </div>
+              );
+            })}
+            <div className="flex justify-between items-center gap-2">
+              <button
+                className="border w-fit mx-auto bg-red-400 rounded py-1 px-5 mt-3"
+                onClick={() =>
+                  setOpen((prev) => ({ ...prev, historyBox: false }))
+                }
+              >
+                cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

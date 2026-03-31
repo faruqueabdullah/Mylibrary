@@ -27,13 +27,13 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
       bookId,
       memberId,
       member: selectedMember,
-      issueDate: new Date().toLocaleDateString(),
-      dueDate: new Date(dueDate).toLocaleDateString("en-GB"),
+      issueDate: new Date().toISOString(),
+      dueDate: new Date(dueDate).toISOString(),
       returnDate: null,
       renewCount:0,
       status: "borrowed",
       history:[
-        {status:"borrowed", date:new Date().toLocaleDateString(),}
+        {status:"borrowed", date:new Date().toISOString(),}
       ]
     };
 

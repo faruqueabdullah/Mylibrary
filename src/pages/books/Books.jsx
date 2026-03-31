@@ -59,7 +59,20 @@ export default function Books() {
       renderCell: (params) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
-            <button onClick={()=>deleteBook(params.id)} className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center">
+            <button
+              onClick={() => {
+                setIsEdit(true);
+                setBookDetails(params.row);
+                setAddClick(true)
+              }}
+              className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => deleteBook(params.id)}
+              className="rounded-xl w-30 h-10 bg-red-300 flex items-center justify-center"
+            >
               Delete
             </button>
             <button
@@ -80,22 +93,24 @@ export default function Books() {
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [issueBtnClicked, setIssueBtnClicked] = useState(false);
-  const [bookDetails, setBookDetails] = useState([]);
+  const [bookDetails, setBookDetails] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
   const { books } = UseFirebaseContext(); // getting books from context
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
   }
+  console.log(addClick);
 
   //filter books by title, isbn, author, category
- const rowData = books?.filter(
-      (data) =>
-        data.title.toLowerCase().includes(inputValue.toLowerCase()) ||
-        data.isbn.toLowerCase().includes(inputValue.toLowerCase()) ||
-        data.author.toLowerCase().includes(inputValue.toLowerCase()) ||
-        data.category.toLowerCase().includes(inputValue.toLowerCase()),
-    );
+  const rowData = books?.filter(
+    (data) =>
+      data.title.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data.isbn.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data.author.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data.category.toLowerCase().includes(inputValue.toLowerCase()),
+  );
 
   return (
     <>
@@ -126,7 +141,15 @@ export default function Books() {
         </div>
       </div>
       <Table columns={columns} rows={rowData} />
-      {addClick && <Addbooks setAddClick={setAddClick} />}
+      {addClick && (
+        <Addbooks
+          bookDetails={bookDetails}
+          setAddClick={setAddClick}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
+          setBookDetails={setBookDetails}
+        />
+      )}
       {issueBtnClicked && (
         <Issue
           setIssueBtnClicked={setIssueBtnClicked}

@@ -5,7 +5,8 @@ export default function Form({
   formData,
   setAddClick,
   formLabels,
-  formText
+  formText,
+  setBookDetails,
 }) {
   return (
     <>
@@ -16,7 +17,10 @@ export default function Form({
         <div className="heading flex justify-between items-center pb-5">
           <h2 className="text-2xl font-semibold">{formText.heading}</h2>
           <span
-            onClick={() => setAddClick(false)}
+            onClick={() => {
+              setAddClick(false);
+              setBookDetails(null);
+            }}
             className="text-xl cursor-pointer"
           >
             X

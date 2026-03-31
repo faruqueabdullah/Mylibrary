@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "./Form";
 import { addBooks } from "./firebaseServices";
 
-export default function Addbooks({ setAddClick }) {
+export default function Addbooks({
+  setIsEdit,
+  bookDetails,
+  setAddClick,
+  setBookDetails
+}) {
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -12,6 +17,19 @@ export default function Addbooks({ setAddClick }) {
   });
 
   const [errorMessage, setErrorMessage] = useState({});
+
+  useEffect(() => {
+    if (bookDetails) {
+      setFormData({
+        title: bookDetails.title,
+        author: bookDetails.author,
+        isbn: bookDetails.isbn,
+        category: bookDetails.category,
+        totalCopies: bookDetails.totalCopies,
+      });
+      console.log("re-render")
+    }
+  }, [bookDetails]);
 
   function handleChange(e) {
     let { id, value } = e.target;
@@ -61,6 +79,9 @@ export default function Addbooks({ setAddClick }) {
       category: "",
       totalCopies: "",
     });
+
+    setIsEdit(false)
+    setBookDetails(null)
   }
 
   const formLabels = [
@@ -80,6 +101,7 @@ export default function Addbooks({ setAddClick }) {
         formData={formData}
         setAddClick={setAddClick}
         formLabels={formLabels}
+        setBookDetails={setBookDetails}
         formText={{ heading: "Add New Book", button: "Add book" }}
       />
     </div>

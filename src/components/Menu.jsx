@@ -17,7 +17,7 @@ export default function Menu() {
                   alt={items.title}
                   className="w-6"
                 />
-                <span>{items.title}</span>
+                <span className="hidden lg:block">{items.title}</span>
               </div>
             </Link>
           );
@@ -25,7 +25,7 @@ export default function Menu() {
       </div>
       <div className="logout flex gap-3">
         <img src="./logout.png" alt="logout" className="w-6" />
-        <span>Logout</span>
+        <span className="hidden lg:block">Logout</span>
       </div>
     </div>
   );
