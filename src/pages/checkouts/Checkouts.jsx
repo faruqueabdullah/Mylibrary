@@ -24,7 +24,7 @@ export default function Checkouts() {
       headerName: "Action",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 300,
+      minWidth: 300,
       flex:1,
       renderCell: (param) => {
         return (

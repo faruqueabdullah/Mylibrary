@@ -3,24 +3,54 @@ import { serverTimestamp } from "firebase/firestore";
 import useForm from "../hooks/useForm";
 import { UseThemeContext } from "../Context/ThemeProvider";
 // import { db } from "../firebase";
-import { addMember } from "./firebaseServices";
+import { addMember, updateMember } from "./firebaseServices";
+import { useEffect } from "react";
+import { UseFirebaseContext } from "../Context/Firebaseprovider";
 
-export default function Addmember({ setAddClick }) {
+export default function Addmember({
+  setIsEdit,
+  isEdit,
+  memberDetails,
+  setAddClick,
+}) {
+  const { theme } = UseThemeContext();
+  const { members } = UseFirebaseContext();
 
+  const { formData, errorMessage, handleChange, handleSubmit, setFormData } =
+    useForm({
+      initialValues: {
+        username: "",
+        email: "",
+        phone: "",
+        membershipType: "",
+      },
+      validate: handleError,
+      sendData,
+    });
 
-  const{theme} = UseThemeContext()
+  // console.log(memberDetails)
 
-  const {formData, errorMessage, handleChange, handleSubmit} = useForm({
-    initialValues: {
-      username: "",
-      email: "",
-      phone: "",
-      membershipType: "",
-    },
-    validate:handleError,
-    sendData
-  });
+  // filling form data (form inputs) when click on edit.
+  useEffect(() => {
+    if ((isEdit, memberDetails)) {
+      const { username, email, phone, membershipType } = memberDetails;
+      setFormData({ username, email, phone, membershipType });
+    }
+  }, [isEdit, memberDetails]);
 
+  // updating member details
+  function updateMemberDetails() {
+    const memberObj = {};
+    const [member] = members.filter((member) => member.id === memberDetails.id);
+
+    Object.entries(formData).forEach(([key, value]) => {
+      memberObj[key] = value;
+    });
+
+    updateMember(member.id, { ...member, ...memberObj });
+  }
+
+  // checking empty inputs and displaying error
   function handleError(formData) {
     let newError = {};
     Object.entries(formData).forEach(([key, value]) => {
@@ -33,7 +63,11 @@ export default function Addmember({ setAddClick }) {
   }
 
   async function sendData(data) {
-    // console.log(data)
+    if (isEdit && memberDetails) {
+      updateMemberDetails();
+      return
+    }
+
     const memberId = "LIB-M-" + Math.floor(1000 + Math.random() * 9000);
 
     const newMember = {
@@ -44,7 +78,7 @@ export default function Addmember({ setAddClick }) {
       registeredAt: serverTimestamp(),
     };
 
-    addMember(memberId, newMember)
+    addMember(memberId, newMember);
   }
 
   const formLabels = [
@@ -55,7 +89,9 @@ export default function Addmember({ setAddClick }) {
   ];
 
   return (
-    <div className={`${theme?'bg-dark/95 text-softwhite':'bg-softwhite/90 text-dark'} absolute left-0 top-0 w-full h-full flex justify-center items-center`}>
+    <div
+      className={`${theme ? "bg-dark/95 text-softwhite" : "bg-softwhite/90 text-dark"} absolute left-0 top-0 w-full h-full flex justify-center items-center`}
+    >
       <Form
         handleSubmit={handleSubmit}
         handleChange={handleChange}
@@ -63,7 +99,13 @@ export default function Addmember({ setAddClick }) {
         setAddClick={setAddClick}
         formData={formData}
         formLabels={formLabels}
-        formText={{ heading: "Add New Member", button: "Add member" }}
+        setIsEdit={setIsEdit}
+        isEdit={isEdit}
+        formText={{
+          heading: "Add New Member",
+          button: "Add member",
+          edit: "Edit member",
+        }}
       />
     </div>
   );

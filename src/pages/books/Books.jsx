@@ -71,7 +71,10 @@ export default function Books() {
               Edit
             </button>
             <button
-              onClick={() => deleteBook(params.id)}
+              onClick={() => {
+                deleteBook(params.id);
+                // console.log(params.id)
+              }}
               className="rounded-xl w-30 h-10 bg-red-300 flex items-center justify-center"
             >
               Delete
@@ -110,7 +113,7 @@ export default function Books() {
       data.category.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
-  console.log(rowData)
+  // console.log(rowData)
 
   return (
     <>

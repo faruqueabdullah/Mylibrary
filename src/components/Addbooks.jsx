@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import Form from "./Form";
-import { addBooks } from "./firebaseServices";
+import { addBooks, updateBook } from "./firebaseServices";
 import useForm from "../hooks/useForm";
 import { UseThemeContext } from "../Context/ThemeProvider";
+import { UseFirebaseContext } from "../Context/Firebaseprovider";
+
 
 export default function Addbooks({
   setAddClick,
@@ -12,7 +14,9 @@ export default function Addbooks({
 }) {
   const { theme } = UseThemeContext();
 
-  // console.log(bookDetails);
+  const { books } = UseFirebaseContext();
+
+  // console.log(books);
 
   const { formData, errorMessage, handleSubmit, handleChange, setFormData } =
     useForm({
@@ -40,7 +44,7 @@ export default function Addbooks({
     // console.log(formData)
     let newError = {};
     Object.entries(formData).forEach(([key, value]) => {
-      console.log(value)
+      console.log(value);
       if (!value.trim()) {
         newError[key] = `${key} should not be empty`;
       }
@@ -50,12 +54,31 @@ export default function Addbooks({
   }
 
   function sendData(data) {
+    // editing the exsiting book
+
+    if (isEdit && bookDetails) {
+      const newObj = {};
+      const [book] = books.filter((book) => bookDetails.id === book.id);
+
+      Object.entries(data).forEach(([key, value]) => {
+        newObj[key] = value;
+      });
+
+      updateBook(book.id, {
+        ...newObj,
+        availableCopies: data.totalCopies,
+      });
+
+      return;
+    }
+
+    //creating new book
     const bookId = "BOOK-" + Math.floor(1000 + Math.random() * 9000);
 
     const newBook = {
       ...data,
-      totalCopies: Number(formData.totalCopies),
-      availableCopies: Number(formData.totalCopies),
+      totalCopies: formData.totalCopies,
+      availableCopies: formData.totalCopies,
     };
 
     // adding books to firestore

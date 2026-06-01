@@ -13,21 +13,21 @@ export default function Members() {
       headerName: "Member",
       type: "text",
       width: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "email",
       headerName: "Email ID",
       type: "text",
       width: 200,
-      editable: true,
+      editable: false,
     },
     {
       field: "phone",
       headerName: "Mobile Number",
       type: "tel",
       width: 200,
-      editable: true,
+      editable: false,
     },
     {
       field: "action",
@@ -39,7 +39,16 @@ export default function Members() {
       renderCell: (params) => {
         // console.log(params)
         return (
-          <div className="actions flex items-center h-full">
+          <div className="actions flex gap-3 items-center h-full">
+            <button
+              onClick={() => {
+                setIsEdit(true);
+                setMemberDetails(params.row);
+              }}
+              className="rounded-xl w-30 h-9 cursor-pointer bg-gray-500 flex items-center justify-center"
+            >
+              Edit
+            </button>
             <button
               onClick={() => deleteMember(params.id)}
               className="rounded-xl w-30 h-9 cursor-pointer bg-red-400 flex items-center justify-center"
@@ -55,9 +64,11 @@ export default function Members() {
   const { theme } = UseThemeContext();
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  const [memberDetails, setMemberDetails] = useState(null);
 
   const { members } = UseFirebaseContext(); // getting members from firebase context
-  console.log(members);
+  // console.log(members);
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
@@ -95,7 +106,10 @@ export default function Members() {
             <img src="./search.svg" alt="search" className="w-7" />
           </div>
           <button
-            onClick={() => setAddClick(true)}
+            onClick={() => {
+              setAddClick(true)
+              setMemberDetails(null)
+            }}
             className="py-3 px-5 cursor-pointer bg-green-400 rounded-full text-white"
           >
             Add members
@@ -103,7 +117,14 @@ export default function Members() {
         </div>
       </div>
       <Table columns={columns} rows={rowData} />
-      {addClick && <Addmember setAddClick={setAddClick} />}
+      {(addClick || isEdit) && (
+        <Addmember
+          setIsEdit={setIsEdit}
+          isEdit={isEdit}
+          memberDetails={memberDetails}
+          setAddClick={setAddClick}
+        />
+      )}
     </div>
   );
 }
