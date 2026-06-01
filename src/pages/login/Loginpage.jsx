@@ -1,30 +1,35 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { firebaseAuth } from "../../firebase";
+import { UseFirebaseContext } from "../../Context/Firebaseprovider";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Loginpage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
 
-  function handleSubmit(e) {
+  const{login} = UseFirebaseContext()
+  const navigate = useNavigate()
+  
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!email.trim() || !password.trim()) return;
 
-    signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((user) => console.log(user))
-      .catch((error) => {
-        setError(error);
-      });
+    try {
+      await login(email, password)
+      navigate('/')
+    } catch (err) {
+      setError('wrong email or password')
+    }
 
     setEmail("");
     setPassword("");
   }
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-dark-bg">
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-dark">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
+        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-softwhite">
           Login
         </h2>
       </div>
@@ -43,7 +48,11 @@ export default function Loginpage() {
                 id="email"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                required
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setError(null)
+                }}
                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
               />
             </div>
@@ -64,7 +73,11 @@ export default function Loginpage() {
                 name="password"
                 value={password}
                 type="password"
-                onChange={(e) => setPassword(e.target.value)}
+                required
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setError(null)
+                }}
                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
               />
             </div>
@@ -81,12 +94,12 @@ export default function Loginpage() {
         </form>
         <p className="mt-4 text-center text-sm/6 text-red-500">{error}</p>
         <p className="mt-4 text-center text-sm/6 font-bold text-white"> OR</p>
-        <button
+        {/* <button
           type="submit"
           className="cursor-pointer flex w-full justify-center rounded-md bg-transparent px-3 py-1.5 text-sm/6 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
         >
           Login with Google
-        </button>
+        </button> */}
       </div>
     </div>
   );

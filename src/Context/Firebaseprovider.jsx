@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db, firebaseAuth } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 
 const FirebaseContext = createContext(null);
 export const UseFirebaseContext = () => useContext(FirebaseContext);
@@ -9,6 +14,17 @@ export default function Firebaseprovider({ children }) {
   const [members, setMembers] = useState([]);
   const [books, setBooks] = useState([]);
   const [checkOuts, setCheckOuts] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  function login(email, password) {
+    return signInWithEmailAndPassword(firebaseAuth, email, password);
+  }
+
+  async function logout() {
+    await signOut(firebaseAuth)
+    console.log('logout successfully')
+  }
 
   // fetching books and members from database
 
@@ -24,15 +40,28 @@ export default function Firebaseprovider({ children }) {
   };
 
   useEffect(() => {
-    const unsubscribeMembers = fetchCollections("members", setMembers);
-    const unsubscribeBooks = fetchCollections("books", setBooks);
-    const unsubscribeCheckOut = fetchCollections("checkouts", setCheckOuts)
+    async function fetchData() {
+      const unsubscribeMembers = await fetchCollections("members", setMembers);
+      const unsubscribeBooks = await fetchCollections("books", setBooks);
+      const unsubscribeCheckOut = await fetchCollections(
+        "checkouts",
+        setCheckOuts,
+      );
 
-    return () => {
-      unsubscribeMembers();
-      unsubscribeBooks();
-      unsubscribeCheckOut();
-    };
+      const unsubscribeUser = onAuthStateChanged(firebaseAuth, (user) => {
+        setUser(user);
+        setLoading(false);
+      });
+
+      return () => {
+        unsubscribeMembers();
+        unsubscribeBooks();
+        unsubscribeCheckOut();
+        unsubscribeUser();
+      };
+    }
+
+    fetchData();
   }, []);
 
   return (
@@ -40,7 +69,11 @@ export default function Firebaseprovider({ children }) {
       value={{
         members,
         books,
-        checkOuts
+        checkOuts,
+        login,
+        logout,
+        user,
+        loading,
       }}
     >
       {children}

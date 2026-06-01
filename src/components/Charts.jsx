@@ -1,4 +1,5 @@
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { UseThemeContext } from "../Context/ThemeProvider";
 
 export default function Charts() {
   const data = [
@@ -38,8 +39,13 @@ export default function Charts() {
       borrowed: 43,
     },
   ];
+
+  const { theme } = UseThemeContext();
+
   return (
-    <div>
+    <div
+      className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} p-5 rounded-sm`}
+    >
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Check-out Statistics</h3>
         <div className="flex gap-5">
@@ -68,15 +74,43 @@ export default function Charts() {
           left: 10,
         }}
       >
-        <XAxis dataKey="name" />
-        <YAxis width="auto" />
+        <XAxis
+          dataKey="name"
+          axisLine={{
+            stroke: theme ? "#9CA3AF" : "#374151",
+          }}
+          tickLine={{
+            stroke: theme ? "#9CA3AF" : "#374151",
+          }}
+          tick={{
+            fill: theme ? "#F9FAFB" : "#111827",
+          }}
+        />
+        <YAxis
+          width="auto"
+          axisLine={{
+            stroke: theme ? "#9CA3AF" : "#374151",
+          }}
+          tickLine={{
+            stroke: theme ? "#9CA3AF" : "#374151",
+          }}
+          tick={{
+            fill: theme ? "#F9FAFB" : "#111827",
+          }}
+        />
         <Tooltip
-          contentStyle={{padding:"2px" }}
+          contentStyle={{
+            padding: "2px",
+            backgroundColor: theme ? "#1F2937" : "#FFFFFF",
+            border: "none",
+            color: theme ? "white" : "black",
+            boxShadow: "0px 4px 12px rgba(0,0,0,0.15)"
+          }}
           labelStyle={{ display: "none" }}
         />
 
         <Line type="monotone" dataKey="borrowed" stroke="#4ADE80" />
-        <Line type="monotone" dataKey="retuned" stroke="#F87171"  />
+        <Line type="monotone" dataKey="retuned" stroke="#F87171" />
       </LineChart>
     </div>
   );

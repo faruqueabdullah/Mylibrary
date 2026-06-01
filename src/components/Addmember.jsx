@@ -1,23 +1,25 @@
-import { useState } from "react";
 import Form from "./Form";
-import { db } from "../firebase";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import useForm from "../hooks/useForm";
+import { UseThemeContext } from "../Context/ThemeProvider";
+// import { db } from "../firebase";
+import { addMember } from "./firebaseServices";
 
 export default function Addmember({ setAddClick }) {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    phone: "",
-    membershipType: "",
+
+
+  const{theme} = UseThemeContext()
+
+  const {formData, errorMessage, handleChange, handleSubmit} = useForm({
+    initialValues: {
+      username: "",
+      email: "",
+      phone: "",
+      membershipType: "",
+    },
+    validate:handleError,
+    sendData
   });
-
-  const [errorMessage, setErrorMessage] = useState({});
-
-  function handleChange(e) {
-    let { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrorMessage((prev) => ({ ...prev, [id]: "" }));
-  }
 
   function handleError(formData) {
     let newError = {};
@@ -27,47 +29,23 @@ export default function Addmember({ setAddClick }) {
       }
     });
 
-    setErrorMessage(newError);
     return newError;
   }
 
-  function generateMemberId() {
-    return "LIB-M-" + Math.floor(1000 + Math.random() * 9000);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const memberId = generateMemberId()
-
-    const checkError = handleError(formData);
-    if (Object.values(checkError).length > 0) return;
+  async function sendData(data) {
+    // console.log(data)
+    const memberId = "LIB-M-" + Math.floor(1000 + Math.random() * 9000);
 
     const newMember = {
-      name: formData.username,
-      email: formData.email,
-      phone: formData.phone,
-      membershipType: formData.membershipType,
+      ...data,
       status: "active",
       booksIssued: 0,
       fine: 0,
       registeredAt: serverTimestamp(),
     };
 
-    setDoc(doc(db, "members", memberId), newMember)
-      .then(() => {
-        setFormData({
-          username: "",
-          email: "",
-          phone: "",
-          membershipType: "",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    addMember(memberId, newMember)
   }
-
 
   const formLabels = [
     { id: "username", heading: "Full Name", type: "text" },
@@ -77,7 +55,7 @@ export default function Addmember({ setAddClick }) {
   ];
 
   return (
-    <div className="absolute left-0 top-0 w-full h-full bg-[#000000e1] flex justify-center items-center">
+    <div className={`${theme?'bg-dark/95 text-softwhite':'bg-softwhite/90 text-dark'} absolute left-0 top-0 w-full h-full flex justify-center items-center`}>
       <Form
         handleSubmit={handleSubmit}
         handleChange={handleChange}

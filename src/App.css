@@ -7,13 +7,11 @@ body{
 }
 
 @theme {
-  --color-main-bg: #2a3447; 
-  --color-dark-bg: #222b3c; 
-  --color-soft-bg: #f2f1ef;
-
-  --color-main-color: white;
-  --color-dark-color: #2a3447;
-  --color-soft-color: #ddd;
+  --color-main: #1c6fff;
+  /* --color-lightblue:#1c86ff;  */
+  --color-dark: #040614; 
+  --color-softdark: #17181f;
+  --color-softwhite: #fff;
 }
 
 @layer utilities {

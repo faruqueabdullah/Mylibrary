@@ -4,16 +4,28 @@ import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 import { doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { checkoutsArray } from "../../../data";
+import { UseThemeContext } from "../../Context/ThemeProvider";
 
 export default function Checkouts() {
+
+  const{theme} = UseThemeContext()
+
   const columns = [
     ...checkoutsArray,
+     {
+      field: "status",
+      headerName: "Status",
+      type: "text",
+      minWidth: 100,
+      editable: false,
+    },
     {
       field: "action",
       headerName: "Action",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 300,
+      flex:1,
       renderCell: (param) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
@@ -70,7 +82,7 @@ export default function Checkouts() {
   const returnedBook = async (book) => {
     const bookRef = doc(db, "books", book.bookId);
     await updateDoc(bookRef, {
-      availableCopies: increment(1), // if the book is available increase count but if the book is not available add the book in the book component
+      availableCopies: increment(1), // if the book is available increase count but if the book is not available add the book in the book component ????
     });
 
     const bookRef2 = doc(db, "checkouts", book.id);
@@ -112,16 +124,16 @@ export default function Checkouts() {
   };
 
   return (
-    <div className="relative">
-      <div className="heading flex justify-between items-center py-6">
+    <div className={`relative ${theme?'bg-softdark text-softwhite':'bg-softwhite text-softdark '} w-full h-full`}>
+      <div className="heading flex justify-between items-center py-6 px-3">
         <div className="text">
-          <h1 className="text-xl font-semibold text-dark-color">
+          <h1 className="text-xl font-semibold">
             CheckOut Books
           </h1>
-          <span className="text-sm text-dark-color">See borrow details</span>
+          <span className="text-sm">See borrow details</span>
         </div>
         <div className="searchAndCreate flex items-center gap-3">
-          <div className="search border flex items-center h-10 px-4 rounded-full">
+          <div className={` border flex items-center h-10 px-4 rounded-full`}>
             <input
               type="text"
               className="border-0 outline-0"
@@ -129,7 +141,7 @@ export default function Checkouts() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <img src="../../search.png" alt="search" className="w-7" />
+            <img src="./search.svg" alt="search" className="w-7" />
           </div>
         </div>
       </div>
@@ -202,8 +214,8 @@ export default function Checkouts() {
 
       {/* History Box */}
       {open.historyBox && (
-        <div className="flex justify-center items-center w-full h-full bg-gray-200/90 absolute left-0 top-0">
-          <div className="w-150 border rounded-xl p-3 bg-white">
+        <div className={`${theme?'bg-dark/95':'bg-softwhite/90'} flex justify-center items-center w-full h-full absolute left-0 top-0`}>
+          <div className={`${theme?'bg-dark':'bg-softwhite'} w-150 border rounded-xl p-3`}>
             <h3 className="text-2xl text-center pb-3">Checkout History</h3>{" "}
             {selectedCheckout?.history.map((history) => {
               return (

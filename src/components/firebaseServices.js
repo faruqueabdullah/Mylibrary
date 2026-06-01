@@ -6,12 +6,17 @@ export const addBooks = async (bookId, bookObject) => {
    return await setDoc(doc(db, "books", bookId), bookObject)
 }
 
- // delete member
- export const deleteMember = async (memberId) => {
-    await deleteDoc(doc(db, "members", memberId));
-  };
+// adding member to database 
+export const addMember = async (memberId, memberObject) => {
+   return await setDoc(doc(db, "members", memberId), memberObject)
+}
 
 // delete books
  export const deleteBook = async (bookId) => {
     await deleteDoc(doc(db, "books", bookId));
+  };
+
+ // delete member
+ export const deleteMember = async (memberId) => {
+    await deleteDoc(doc(db, "members", memberId));
   };

@@ -29,7 +29,8 @@ export default function Overdue() {
       field: "fine",
       headerName: "Fine",
       type: "text",
-      width: 80,
+      flex: 1,
+      minWidth: 80,
       editable: false,
     },
   ];
@@ -37,7 +38,10 @@ export default function Overdue() {
   const { checkOuts } = UseFirebaseContext();
 
   const overDueBooks = checkOuts
-    ?.filter((book) => book.status === "borrowed" && new Date() > new Date(book.dueDate))
+    ?.filter(
+      (book) =>
+        book.status === "borrowed" && new Date() > new Date(book.dueDate),
+    )
     .map((book) => {
       const today = new Date();
       const dueDate = new Date(book.dueDate);
@@ -47,7 +51,7 @@ export default function Overdue() {
 
       const { memberId, title, isbn } = book;
       return {
-        id:title,
+        id: title,
         memberId,
         title,
         isbn,
@@ -56,10 +60,10 @@ export default function Overdue() {
       };
     });
 
-  console.log(overDueBooks);
+  // console.log(overDueBooks);
   return (
     <div>
-      <Table columns={columnHeading} rows={overDueBooks}/>
+      <Table columns={columnHeading} rows={overDueBooks} />
     </div>
   );
 }

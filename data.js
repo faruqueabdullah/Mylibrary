@@ -3,36 +3,36 @@ export const menu = [
         id: 1,
         title: "Dashboard",
         url: "/",
-        icon: "dashboard.png",
+        icon: "dashboard.svg",
       },
       {
         id: 2,
         title: "Members",
-        url: "app/members",
-        icon: "user.png",
+        url: "/members",
+        icon: "member.svg",
       },
       {
         id: 3,
-        title: "Add Books",
-        url: "/app/books",
+        title: "Books",
+        url: "/books",
         icon: "book.png",
       },
       {
         id: 4,
         title: "Check-out books",
-        url: "/app/checkouts",
-        icon: "checkout.png",
+        url: "/checkouts",
+        icon: "checkout.svg",
       },
       {
         id: 5,
         title: "Setting",
-        url: "/app/setting",
-        icon: "settings.png",
+        url: "/setting",
+        icon: "setting.svg",
       },
       {
         id: 6,
         title: "Help",
-        url: "/add/userhelp",
+        url: "/userhelp",
         icon: "help.png",
       },
 ]
@@ -74,11 +74,5 @@ export const checkoutsArray = [
       width: 100,
       editable: false,
     },
-    {
-      field: "status",
-      headerName: "Status",
-      type: "text",
-      width: 100,
-      editable: false,
-    }
+
 ]

@@ -2,11 +2,14 @@ import { useState } from "react";
 import { UseFirebaseContext } from "../Context/Firebaseprovider";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { UseThemeContext } from "../Context/ThemeProvider";
 
 export default function Issue({ setIssueBtnClicked, bookDetails }) {
   const { members } = UseFirebaseContext();
   const [selectedMember, setSelectedMember] = useState("");
   const [dueDate, setDuedate] = useState("");
+
+  const {theme} = UseThemeContext()
 
   const { id: bookId, title, author, isbn } = bookDetails;
   const labels = { bookId, title, author, isbn };
@@ -17,7 +20,7 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
     if (!selectedMember || !dueDate) return; // simple check to avoid empty inputs
 
     const [{ id: memberId }] = members.filter(
-      (member) => member.name === selectedMember,
+      (member) => member.username === selectedMember,
     ); // getting memberId
 
     const issueBook = {
@@ -30,20 +33,15 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
       issueDate: new Date().toISOString(),
       dueDate: new Date(dueDate).toISOString(),
       returnDate: null,
-      renewCount:0,
+      renewCount: 0,
       status: "borrowed",
-      history:[
-        {status:"borrowed", date:new Date().toISOString(),}
-      ]
+      history: [{ status: "borrowed", date: new Date().toISOString() }],
     };
 
-    addDoc(collection(db, "checkouts"), issueBook)
-      .then(() => {
-        setDuedate("");
-        setSelectedMember("");
-        setIssueBtnClicked(false);
-      })
-      .catch((error) => alert(error));
+    await addDoc(collection(db, "checkouts"), issueBook);
+    setDuedate("");
+    setSelectedMember("");
+    setIssueBtnClicked(false);
 
     // Reduce available copies
     const bookRef = doc(db, "books", bookId);
@@ -55,10 +53,10 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
   };
 
   return (
-    <div className="absolute left-0 top-0 w-full h-full bg-[#000000e1] flex justify-center items-center">
+    <div className={`${theme?'bg-dark/95':'bg-softwhite/90'} absolute left-0 top-0 w-full h-full flex justify-center items-center`}>
       <form
         onSubmit={handleSubmit}
-        className="add-member-form w-md border p-5 rounded-xl bg-soft-bg"
+        className={`${theme?'bg-dark text-softwhite':'bg-softwhite text-dark'} w-md border p-5 rounded-xl`}
       >
         <div className="heading flex justify-between items-center pb-5">
           <h2 className="text-2xl font-semibold">Issue Book</h2>
@@ -86,7 +84,7 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
                 Select Member
               </option>
               {members?.map((member) => {
-                return <option key={member.id}>{member.name}</option>;
+                return <option key={member.id}>{member.username}</option>;
               })}
             </select>
           </div>

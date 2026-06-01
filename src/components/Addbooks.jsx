@@ -1,87 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Form from "./Form";
 import { addBooks } from "./firebaseServices";
+import useForm from "../hooks/useForm";
+import { UseThemeContext } from "../Context/ThemeProvider";
 
 export default function Addbooks({
-  setIsEdit,
-  bookDetails,
   setAddClick,
-  setBookDetails
+  setIsEdit,
+  isEdit,
+  bookDetails,
 }) {
-  const [formData, setFormData] = useState({
-    title: "",
-    author: "",
-    isbn: "",
-    category: "",
-    totalCopies: "",
-  });
+  const { theme } = UseThemeContext();
 
-  const [errorMessage, setErrorMessage] = useState({});
+  // console.log(bookDetails);
+
+  const { formData, errorMessage, handleSubmit, handleChange, setFormData } =
+    useForm({
+      initialValues: {
+        title: "",
+        author: "",
+        isbn: "",
+        category: "",
+        totalCopies: "",
+      },
+      validate: handleError,
+      sendData,
+    });
+
+  // setting formData (input fields) when Click on Edit
 
   useEffect(() => {
-    if (bookDetails) {
-      setFormData({
-        title: bookDetails.title,
-        author: bookDetails.author,
-        isbn: bookDetails.isbn,
-        category: bookDetails.category,
-        totalCopies: bookDetails.totalCopies,
-      });
-      console.log("re-render")
+    if (isEdit && bookDetails) {
+      setFormData(bookDetails);
     }
-  }, [bookDetails]);
+  }, [isEdit, bookDetails]);
 
-  function handleChange(e) {
-    let { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrorMessage((prev) => ({ ...prev, [id]: "" }));
-  }
-
+  // check and set error message for empty inputs values
   function handleError(formData) {
+    // console.log(formData)
     let newError = {};
     Object.entries(formData).forEach(([key, value]) => {
-      if (value.trim() === "") {
+      console.log(value)
+      if (!value.trim()) {
         newError[key] = `${key} should not be empty`;
       }
     });
 
-    setErrorMessage(newError);
     return newError;
   }
 
-  function generatedBookId() {
-    return "BOOK-" + Math.floor(1000 + Math.random() * 9000);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const bookId = generatedBookId();
-
-    const checkError = handleError(formData);
-    if (Object.values(checkError).length > 0) return;
+  function sendData(data) {
+    const bookId = "BOOK-" + Math.floor(1000 + Math.random() * 9000);
 
     const newBook = {
-      title: formData.title,
-      author: formData.author,
-      isbn: formData.isbn,
-      category: formData.category,
+      ...data,
       totalCopies: Number(formData.totalCopies),
       availableCopies: Number(formData.totalCopies),
     };
 
     // adding books to firestore
     addBooks(bookId, newBook);
-
-    setFormData({
-      title: "",
-      author: "",
-      isbn: "",
-      category: "",
-      totalCopies: "",
-    });
-
-    setIsEdit(false)
-    setBookDetails(null)
   }
 
   const formLabels = [
@@ -93,16 +71,23 @@ export default function Addbooks({
   ];
 
   return (
-    <div className="absolute left-0 top-0 w-full h-full bg-[#000000e1] flex justify-center items-center">
+    <div
+      className={`${theme ? "bg-dark/95 text-softwhite" : "bg-softwhite/90 text-dark"} absolute left-0 top-0 w-full h-full flex justify-center items-center`}
+    >
       <Form
         handleSubmit={handleSubmit}
         handleChange={handleChange}
         errorMessage={errorMessage}
         formData={formData}
         setAddClick={setAddClick}
+        setIsEdit={setIsEdit}
+        isEdit={isEdit}
         formLabels={formLabels}
-        setBookDetails={setBookDetails}
-        formText={{ heading: "Add New Book", button: "Add book" }}
+        formText={{
+          heading: "Add New Book",
+          button: "Add book",
+          edit: "Edit book",
+        }}
       />
     </div>
   );

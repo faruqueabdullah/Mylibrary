@@ -4,6 +4,7 @@ import Addbooks from "../../components/Addbooks";
 import Issue from "../../components/Issue";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 import { deleteBook } from "../../components/firebaseServices";
+import { UseThemeContext } from "../../Context/ThemeProvider";
 
 export default function Books() {
   const columns = [
@@ -55,7 +56,8 @@ export default function Books() {
       headerName: "Action",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
       renderCell: (params) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
@@ -63,7 +65,6 @@ export default function Books() {
               onClick={() => {
                 setIsEdit(true);
                 setBookDetails(params.row);
-                setAddClick(true)
               }}
               className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center"
             >
@@ -90,6 +91,8 @@ export default function Books() {
     },
   ];
 
+  const { theme } = UseThemeContext();
+
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [issueBtnClicked, setIssueBtnClicked] = useState(false);
@@ -97,11 +100,6 @@ export default function Books() {
   const [isEdit, setIsEdit] = useState(false);
 
   const { books } = UseFirebaseContext(); // getting books from context
-
-  function handleChange(e) {
-    setInputValue(e.target.value.trim());
-  }
-  console.log(addClick);
 
   //filter books by title, isbn, author, category
   const rowData = books?.filter(
@@ -112,28 +110,33 @@ export default function Books() {
       data.category.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
+  console.log(rowData)
+
   return (
     <>
-      <div className="memberHeading flex justify-between items-center py-6">
+      <div
+        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"}  flex justify-between items-center py-6 px-3`}
+      >
         <div className="text">
-          <h1 className="text-xl font-semibold text-dark-color">Books</h1>
-          <span className="text-sm text-dark-color">
-            search and create books
-          </span>
+          <h1 className="text-xl font-semibold">Books</h1>
+          <span className="text-sm">search and create books</span>
         </div>
         <div className="searchAndCreate flex items-center gap-3">
-          <div className="search border flex items-center h-10 px-4 rounded-full">
+          <div className = "search border flex items-center h-10 px-4 rounded-full">
             <input
               type="text"
               className="border-0 outline-0"
               placeholder="search by ISBN, title, author"
               value={inputValue}
-              onChange={handleChange}
+              onChange={(e)=>{setInputValue(e.target.value.trim())}}
             />
-            <img src="../../search.png" alt="search" className="w-7" />
+            <img src="./search.svg" alt="search" className="w-7" />
           </div>
           <button
-            onClick={() => setAddClick(true)}
+            onClick={() => {
+              setAddClick(true);
+              setBookDetails(null);
+            }}
             className="py-3 px-5 cursor-pointer bg-green-400 rounded-full text-white"
           >
             Add Books
@@ -141,13 +144,12 @@ export default function Books() {
         </div>
       </div>
       <Table columns={columns} rows={rowData} />
-      {addClick && (
+      {(addClick || isEdit) && (
         <Addbooks
-          bookDetails={bookDetails}
-          setAddClick={setAddClick}
           isEdit={isEdit}
           setIsEdit={setIsEdit}
-          setBookDetails={setBookDetails}
+          setAddClick={setAddClick}
+          bookDetails={bookDetails}
         />
       )}
       {issueBtnClicked && (

@@ -3,12 +3,13 @@ import Table from "../../components/Table";
 import Addmember from "../../components/Addmember";
 import { UseFirebaseContext } from "../../Context/Firebaseprovider";
 import { deleteMember } from "../../components/firebaseServices";
+import { UseThemeContext } from "../../Context/ThemeProvider";
 
 export default function Members() {
   const columns = [
     { field: "id", headerName: "Member ID", width: 100 },
     {
-      field: "name",
+      field: "username",
       headerName: "Member",
       type: "text",
       width: 150,
@@ -34,6 +35,7 @@ export default function Members() {
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 150,
+      flex: 1,
       renderCell: (params) => {
         // console.log(params)
         return (
@@ -50,34 +52,39 @@ export default function Members() {
     },
   ];
 
+  const { theme } = UseThemeContext();
   const [addClick, setAddClick] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const { members } = UseFirebaseContext(); // getting members from firebase context
+  console.log(members);
 
   function handleChange(e) {
     setInputValue(e.target.value.trim());
   }
 
   //filter table row
-  const rowData = members?.filter(
-    (data) =>
-      data.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-      data.id.toLowerCase().includes(inputValue.toLowerCase()) ||
-      data.email.toLowerCase().includes(inputValue.toLowerCase()),
-  );
+  const rowData = members?.filter((data) => {
+    return (
+      data?.username.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data?.id.toLowerCase().includes(inputValue.toLowerCase()) ||
+      data?.email.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  });
 
   return (
     <div>
-      <div className="memberHeading flex justify-between items-center py-6">
+      <div
+        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} flex justify-between items-center py-6 px-3`}
+      >
         <div className="text">
-          <h1 className="text-xl font-semibold text-dark-color">Members</h1>
-          <span className="text-sm text-dark-color">
-            search and create a member
-          </span>
+          <h1 className="text-xl font-semibold">Members</h1>
+          <span className="text-sm ">search and create a member</span>
         </div>
         <div className="searchAndCreate flex items-center gap-3">
-          <div className="search border flex items-center h-10 px-4 rounded-full">
+          <div
+            className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} border flex items-center h-10 px-4 rounded-full`}
+          >
             <input
               type="text"
               className="border-0 outline-0"
@@ -85,7 +92,7 @@ export default function Members() {
               value={inputValue}
               onChange={handleChange}
             />
-            <img src="../../search.png" alt="search" className="w-7" />
+            <img src="./search.svg" alt="search" className="w-7" />
           </div>
           <button
             onClick={() => setAddClick(true)}

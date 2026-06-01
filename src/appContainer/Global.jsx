@@ -1,16 +1,19 @@
 import { Outlet } from "react-router-dom";
 import Menu from "../components/Menu";
 import Navbar from "../components/Navbar";
+import { UseThemeContext } from "../Context/ThemeProvider";
 
 export default function Global() {
+
+  const{theme} = UseThemeContext()
   return (
-    <div className="global bg-main-color text-dark-bg">
+    <div className="global">
         <Navbar />
         <div className="bodyContainer flex">
-          <div className="menuContainer max-w-64 h-[calc(100vh-81px)] border-r border-r-soft-bg p-3">
+          <div className="menuContainer max-w-52 lg:w-full h-[calc(100vh-81px)] border-r border-r-soft-bg">
             <Menu />
           </div>
-          <div className="contentContainer bg-soft-bg w-full h-[calc(100vh-81px)] p-3 overflow-y-scroll scrollbar">
+          <div className={`${theme?'bg-dark':'bg-softwhite'} w-full h-[calc(100vh-81px)] overflow-y-scroll scrollbar p-3`}>
             <Outlet />
           </div>
         </div>

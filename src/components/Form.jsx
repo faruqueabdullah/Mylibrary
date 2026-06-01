@@ -1,3 +1,5 @@
+import { UseThemeContext } from "../Context/ThemeProvider";
+
 export default function Form({
   handleSubmit,
   handleChange,
@@ -6,20 +8,27 @@ export default function Form({
   setAddClick,
   formLabels,
   formText,
-  setBookDetails,
+  isEdit,
+  setIsEdit
 }) {
+
+// console.log(formData)
+
+const{theme} = UseThemeContext()
+
+
   return (
     <>
       <form
         onSubmit={handleSubmit}
-        className="add-member-form w-sm border p-5 rounded-xl bg-soft-bg"
+        className={`${theme?'bg-dark':'bg-softwhite'} add-member-form w-sm border p-5 rounded-xl`}
       >
         <div className="heading flex justify-between items-center pb-5">
           <h2 className="text-2xl font-semibold">{formText.heading}</h2>
           <span
             onClick={() => {
               setAddClick(false);
-              setBookDetails(null);
+              setIsEdit(false)
             }}
             className="text-xl cursor-pointer"
           >
@@ -44,6 +53,7 @@ export default function Form({
                   value={formData.membershipType}
                   onChange={handleChange}
                 >
+                  <option hidden>Student</option>
                   <option value="student">Student</option>
                   <option value="teacher">Teacher</option>
                   <option value="guest">Guest</option>
@@ -63,7 +73,9 @@ export default function Form({
         })}
 
         <button className="bg-green-400 p-3 my-3 rounded-sm w-full">
-          {formText.button}
+          {
+            isEdit?formText.edit:formText.button
+          }
         </button>
       </form>
     </>
