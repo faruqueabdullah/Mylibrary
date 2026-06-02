@@ -93,8 +93,8 @@ export default function Loginpage() {
           </div>
         </form>
         <p className="mt-4 text-center text-sm/6 text-red-500">{error}</p>
-        <p className="mt-4 text-center text-sm/6 font-bold text-white"> OR</p>
-        {/* <button
+        {/* <p className="mt-4 text-center text-sm/6 font-bold text-white"> OR</p>
+        <button
           type="submit"
           className="cursor-pointer flex w-full justify-center rounded-md bg-transparent px-3 py-1.5 text-sm/6 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
         >

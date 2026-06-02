@@ -94,7 +94,7 @@ export default function Members() {
         </div>
         <div className="flex items-center gap-1.5">
           <div
-            className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} border flex items-center h-10 px-4 rounded-full`}
+            className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} border flex items-center h-10 px-3 rounded-full`}
           >
             <input
               type="text"

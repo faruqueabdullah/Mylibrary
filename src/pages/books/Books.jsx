@@ -124,8 +124,8 @@ export default function Books() {
           <h1 className="text-xl font-semibold">Books</h1>
           <span className="text-sm">search and create books</span>
         </div>
-        <div className="searchAndCreate flex items-center gap-3">
-          <div className = "search border flex items-center h-10 px-4 rounded-full">
+        <div className="searchAndCreate flex items-center gap-1.5">
+          <div className = "search border flex items-center h-10 px-3 rounded-full">
             <input
               type="text"
               className="border-0 outline-0"

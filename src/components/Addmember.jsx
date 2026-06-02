@@ -90,7 +90,7 @@ export default function Addmember({
 
   return (
     <div
-      className={`${theme ? "bg-dark/95 text-softwhite" : "bg-softwhite/90 text-dark"} absolute left-0 top-0 w-full h-full flex justify-center items-center`}
+      className={`${theme ? "bg-dark/95 text-softwhite" : "bg-softwhite/90 text-dark"} absolute left-0 top-0 w-full h-full flex justify-center items-center overflow-hidden p-1.5`}
     >
       <Form
         handleSubmit={handleSubmit}

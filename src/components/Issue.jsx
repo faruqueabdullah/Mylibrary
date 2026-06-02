@@ -53,7 +53,7 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
   };
 
   return (
-    <div className={`${theme?'bg-dark/95':'bg-softwhite/90'} absolute left-0 top-0 w-full h-full flex justify-center items-center`}>
+    <div className={`${theme?'bg-dark/95':'bg-softwhite/90'} absolute left-0 top-0 w-full h-full flex justify-center items-center p-2 overflow-hidden`}>
       <form
         onSubmit={handleSubmit}
         className={`${theme?'bg-dark text-softwhite':'bg-softwhite text-dark'} w-md border p-5 rounded-xl`}
@@ -76,7 +76,7 @@ export default function Issue({ setIssueBtnClicked, bookDetails }) {
             <select
               id="user-type"
               name="user-type"
-              className="border p-2 w-full"
+              className={`${theme?'bg-dark':'bg-softwhite'} border p-2 w-full`}
               onChange={(e) => setSelectedMember(e.target.value)}
               value={selectedMember}
             >

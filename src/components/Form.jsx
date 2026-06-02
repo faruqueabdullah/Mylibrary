@@ -48,7 +48,7 @@ const{theme} = UseThemeContext()
               {label.id === "membershipType" ? (
                 <select
                   id={label.id}
-                  className="border p-2"
+                  className={`${theme?'bg-dark':'bg-softwhite'} border p-2 `}
                   name={label.id}
                   value={formData.membershipType}
                   onChange={handleChange}

@@ -146,8 +146,8 @@ export default function Checkouts() {
 
       {/* Renew Box */}
       {open.renewBox && (
-        <div className="flex justify-center items-center w-full h-full bg-gray-200/90 absolute left-0 top-0">
-          <div className="w-80 border rounded-xl p-3 bg-white">
+        <div className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0 p-1.5`}>
+          <div className={`${theme ? "bg-dark" : "bg-softwhite"} w-80 border rounded-xl p-3`}>
             <h3 className="text-2xl text-center pb-3">Renew Book</h3>{" "}
             <p>
               <b>Book:</b> {selectedCheckout?.title}
@@ -212,7 +212,7 @@ export default function Checkouts() {
       {/* History Box */}
       {open.historyBox && (
         <div
-          className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0`}
+          className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0 p-1.5`}
         >
           <div
             className={`${theme ? "bg-dark" : "bg-softwhite"} w-150 border rounded-xl p-3`}
