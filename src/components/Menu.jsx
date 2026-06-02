@@ -18,7 +18,7 @@ export default function Menu() {
               to={items.url}
               className={({ isActive }) =>
                 `
-                   px-3 py-1 rounded-md transition-colors
+                   px-1 py-1 rounded-md transition-colors
                 ${
                   isActive
                     ? "bg-main text-softwhite"

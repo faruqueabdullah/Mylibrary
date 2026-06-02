@@ -118,7 +118,7 @@ export default function Books() {
   return (
     <>
       <div
-        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"}  flex justify-between items-center py-6 px-3`}
+        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"}  flex flex-col sm:flex-row justify-between py-6 px-1 sm:px-3 gap-4`}
       >
         <div className="text">
           <h1 className="text-xl font-semibold">Books</h1>
@@ -133,16 +133,16 @@ export default function Books() {
               value={inputValue}
               onChange={(e)=>{setInputValue(e.target.value.trim())}}
             />
-            <img src="./search.svg" alt="search" className="w-7" />
+            <img src="./search.svg" alt="search" className="hidden sm:block w-7" />
           </div>
           <button
             onClick={() => {
               setAddClick(true);
               setBookDetails(null);
             }}
-            className="py-3 px-5 cursor-pointer bg-green-400 rounded-full text-white"
+            className="flex items-center justify-center gap-2 w-full max-w-28 py-2.5 px-5 cursor-pointer bg-green-400 rounded-full text-white"
           >
-            Add Books
+            Add <span className="hidden sm:block">Books</span>
           </button>
         </div>
       </div>

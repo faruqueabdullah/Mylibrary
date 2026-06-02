@@ -26,7 +26,7 @@ export default function Members() {
       field: "phone",
       headerName: "Mobile Number",
       type: "tel",
-      width: 200,
+      width: 120,
       editable: false,
     },
     {
@@ -34,7 +34,7 @@ export default function Members() {
       headerName: "Action",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 150,
+      minWidth: 150,
       flex: 1,
       renderCell: (params) => {
         // console.log(params)
@@ -86,13 +86,13 @@ export default function Members() {
   return (
     <div>
       <div
-        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} flex justify-between items-center py-6 px-3`}
+        className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} flex flex-col sm:flex-row sm:justify-between py-6 px-1 sm:px-3 gap-4`}
       >
         <div className="text">
           <h1 className="text-xl font-semibold">Members</h1>
           <span className="text-sm ">search and create a member</span>
         </div>
-        <div className="searchAndCreate flex items-center gap-3">
+        <div className="flex items-center gap-1.5">
           <div
             className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} border flex items-center h-10 px-4 rounded-full`}
           >
@@ -103,16 +103,16 @@ export default function Members() {
               value={inputValue}
               onChange={handleChange}
             />
-            <img src="./search.svg" alt="search" className="w-7" />
+            <img src="./search.svg" alt="search" className="hidden sm:block w-7" />
           </div>
           <button
             onClick={() => {
               setAddClick(true)
               setMemberDetails(null)
             }}
-            className="py-3 px-5 cursor-pointer bg-green-400 rounded-full text-white"
+            className="flex gap-1 items-center justify-center max-w-28 w-full py-2.5 px-5 cursor-pointer bg-green-400 rounded-full text-white"
           >
-            Add members
+            Add <span className="hidden sm:block">member</span>
           </button>
         </div>
       </div>

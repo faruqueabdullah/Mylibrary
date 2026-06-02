@@ -13,7 +13,7 @@ export default function Global() {
           <div className="menuContainer max-w-52 lg:w-full h-[calc(100vh-81px)] border-r border-r-soft-bg">
             <Menu />
           </div>
-          <div className={`${theme?'bg-dark':'bg-softwhite'} w-full h-[calc(100vh-81px)] overflow-y-scroll scrollbar p-3`}>
+          <div className={`${theme?'bg-dark':'bg-softwhite'} w-full h-[calc(100vh-81px)] overflow-y-scroll scrollbar sm:p-3`}>
             <Outlet />
           </div>
         </div>

@@ -44,7 +44,7 @@ export default function Charts() {
 
   return (
     <div
-      className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} p-5 rounded-sm`}
+      className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} p-1.5 rounded-sm`}
     >
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Check-out Statistics</h3>

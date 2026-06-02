@@ -7,12 +7,11 @@ import { checkoutsArray } from "../../../data";
 import { UseThemeContext } from "../../Context/ThemeProvider";
 
 export default function Checkouts() {
-
-  const{theme} = UseThemeContext()
+  const { theme } = UseThemeContext();
 
   const columns = [
     ...checkoutsArray,
-     {
+    {
       field: "status",
       headerName: "Status",
       type: "text",
@@ -25,7 +24,7 @@ export default function Checkouts() {
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       minWidth: 300,
-      flex:1,
+      flex: 1,
       renderCell: (param) => {
         return (
           <div className="actions flex items-center gap-2 h-full">
@@ -124,25 +123,23 @@ export default function Checkouts() {
   };
 
   return (
-    <div className={`relative ${theme?'bg-softdark text-softwhite':'bg-softwhite text-softdark '} w-full h-full`}>
-      <div className="heading flex justify-between items-center py-6 px-3">
+    <div
+      className={`relative ${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark "} w-full h-full`}
+    >
+      <div className="heading flex flex-col sm:flex-row justify-between py-6 px-1 sm:px-3 gap-4">
         <div className="text">
-          <h1 className="text-xl font-semibold">
-            CheckOut Books
-          </h1>
+          <h1 className="text-xl font-semibold">CheckOut Books</h1>
           <span className="text-sm">See borrow details</span>
         </div>
-        <div className="searchAndCreate flex items-center gap-3">
-          <div className={` border flex items-center h-10 px-4 rounded-full`}>
-            <input
-              type="text"
-              className="border-0 outline-0"
-              placeholder="search by id, member, book, author"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <img src="./search.svg" alt="search" className="w-7" />
-          </div>
+        <div className={` border flex w-fit items-center h-10 px-4 rounded-full`}>
+          <input
+            type="text"
+            className="border-0 outline-0"
+            placeholder="search by id, member, book, author"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <img src="./search.svg" alt="search" className="w-7" />
         </div>
       </div>
       <Table columns={columns} rows={filterRow} />
@@ -214,8 +211,12 @@ export default function Checkouts() {
 
       {/* History Box */}
       {open.historyBox && (
-        <div className={`${theme?'bg-dark/95':'bg-softwhite/90'} flex justify-center items-center w-full h-full absolute left-0 top-0`}>
-          <div className={`${theme?'bg-dark':'bg-softwhite'} w-150 border rounded-xl p-3`}>
+        <div
+          className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0`}
+        >
+          <div
+            className={`${theme ? "bg-dark" : "bg-softwhite"} w-150 border rounded-xl p-3`}
+          >
             <h3 className="text-2xl text-center pb-3">Checkout History</h3>{" "}
             {selectedCheckout?.history.map((history) => {
               return (

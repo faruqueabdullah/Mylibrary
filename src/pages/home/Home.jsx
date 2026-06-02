@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <div
-      className={`${theme ? "bg-dark text-softwhite" : "bg-softwhite text-dark"} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 auto-rows-[minmax(120px,auto)] p-3`}
+      className={`${theme ? "bg-dark text-softwhite" : "bg-softwhite text-dark"} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 auto-rows-[minmax(120px,auto)] p-1`}
     >
       <BooksCard title={"Total Books"} books={totalBooks} img={"./book1.png"} />
       <BooksCard
@@ -57,11 +57,11 @@ export default function Home() {
       <div className={`sm:col-span-2 sm:row-span-2 border rounded-sm text-sm flex flex-col justify-between`}>
         <Charts />
       </div>
-      <div className={`${theme ? "bg-softdark" : "bg-softwhite"} sm:col-span-2 sm:row-span-2 border rounded-sm p-5 text-sm flex flex-col `}>
+      <div className={`${theme ? "bg-softdark" : "bg-softwhite"} sm:col-span-2 sm:row-span-2 border rounded-sm p-1.5 text-sm flex flex-col `}>
         <h3 className="font-semibold text-lg">Overdue's History</h3>
         <Overdue />
       </div>
-      <div className={`${theme ? "bg-softdark" : "bg-softwhite"}  col-span-1 sm:col-span-2 md:col-span-3 sm:row-span-2 border rounded-sm p-5 text-sm flex flex-col justify-between`}>
+      <div className={`${theme ? "bg-softdark" : "bg-softwhite"}  col-span-1 sm:col-span-2 md:col-span-3 sm:row-span-2 border rounded-sm p-1.5 text-sm flex flex-col justify-between`}>
         <div className="header flex items-center justify-between pb-3">
           <h3 className="font-semibold text-lg">Recent CheckOuts</h3>
           <Link to={"/checkouts"} className="text-green-500">
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
         <RecentCheckouts />
       </div>
-      <div className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} overflow-hidden scroll-auto row-span-2 border rounded-sm p-5 text-sm flex flex-col space-y-4`}>
+      <div className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} overflow-hidden scroll-auto row-span-2 border rounded-sm p-1.5 text-sm flex flex-col space-y-4`}>
         <div className="px-2 py-1 text-softwhite text-[12px] border rounded-full bg-green-400 w-fit">
           Most Read
         </div>

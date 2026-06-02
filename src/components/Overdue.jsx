@@ -62,8 +62,8 @@ export default function Overdue() {
 
   // console.log(overDueBooks);
   return (
-    <div>
+    <>
       <Table columns={columnHeading} rows={overDueBooks} />
-    </div>
+    </>
   );
 }
