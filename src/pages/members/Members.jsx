@@ -84,7 +84,7 @@ export default function Members() {
   });
 
   return (
-    <div>
+    <>
       <div
         className={`${theme ? "bg-softdark text-softwhite" : "bg-softwhite text-softdark"} flex flex-col sm:flex-row sm:justify-between py-6 px-1 sm:px-3 gap-4`}
       >
@@ -125,6 +125,6 @@ export default function Members() {
           setAddClick={setAddClick}
         />
       )}
-    </div>
+    </>
   );
 }

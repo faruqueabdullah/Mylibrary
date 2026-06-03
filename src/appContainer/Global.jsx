@@ -9,8 +9,8 @@ export default function Global() {
   return (
     <div className="global">
         <Navbar />
-        <div className="bodyContainer flex">
-          <div className="menuContainer max-w-52 lg:w-full h-[calc(100vh-81px)] border-r border-r-soft-bg">
+        <div className="bodyContainer flex relative">
+          <div className="menuContainer max-w-52 lg:w-full h-[calc(100vh-81px)] border-r">
             <Menu />
           </div>
           <div className={`${theme?'bg-dark':'bg-softwhite'} w-full h-[calc(100vh-81px)] overflow-y-scroll scrollbar sm:p-3`}>
