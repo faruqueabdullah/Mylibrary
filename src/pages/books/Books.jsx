@@ -66,7 +66,7 @@ export default function Books() {
                 setIsEdit(true);
                 setBookDetails(params.row);
               }}
-              className="rounded-xl w-30 h-10 bg-gray-300 flex items-center justify-center"
+              className="rounded-xl w-30 h-10 bg-gray-400 flex items-center justify-center"
             >
               Edit
             </button>

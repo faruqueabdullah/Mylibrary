@@ -61,7 +61,7 @@ export default function Home() {
         <h3 className="font-semibold text-lg">Overdue's History</h3>
         <Overdue />
       </div>
-      <div className={`${theme ? "bg-softdark" : "bg-softwhite"}  col-span-1 sm:col-span-2 md:col-span-3 sm:row-span-2 border rounded-sm p-1.5 text-sm flex flex-col justify-between`}>
+      <div className={`${theme ? "bg-softdark" : "bg-softwhite"}  col-span-1 sm:col-span-2 md:col-span-3 sm:row-span-2 border rounded-sm p-1.5 text-sm flex flex-col justify-between sm:max-h-96 overflow-y-scroll scrollbar`}>
         <div className="header flex items-center justify-between pb-3">
           <h3 className="font-semibold text-lg">Recent CheckOuts</h3>
           <Link to={"/checkouts"} className="text-green-500">

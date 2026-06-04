@@ -45,13 +45,13 @@ export default function Members() {
                 setIsEdit(true);
                 setMemberDetails(params.row);
               }}
-              className="rounded-xl w-30 h-9 cursor-pointer bg-gray-500 flex items-center justify-center"
+              className="rounded-xl w-24 h-9 cursor-pointer bg-gray-500 flex items-center justify-center"
             >
               Edit
             </button>
             <button
               onClick={() => deleteMember(params.id)}
-              className="rounded-xl w-30 h-9 cursor-pointer bg-red-400 flex items-center justify-center"
+              className="rounded-xl w-24 h-9 cursor-pointer bg-red-400 flex items-center justify-center"
             >
               Delete
             </button>

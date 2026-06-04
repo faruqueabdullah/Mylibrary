@@ -33,7 +33,7 @@ export default function Checkouts() {
               onClick={() => {
                 returnedBook(param.row);
               }}
-              className={`rounded-xl w-30 h-10 ${param.row.status === "returned" ? "bg-gray-300" : "bg-gray-400"} flex items-center justify-center `}
+              className={`rounded-xl w-24 h-10 ${param.row.status === "returned" ? "bg-gray-300" : "bg-gray-400"} flex items-center justify-center cursor-pointer`}
             >
               return
             </button>
@@ -43,7 +43,7 @@ export default function Checkouts() {
                 setOpen((prev) => ({ ...prev, renewBox: true }));
                 setSelectedCheckout(param.row);
               }}
-              className={`rounded-xl w-30 h-10 ${param.row.status === "returned" ? "bg-red-300" : "bg-red-400"} flex items-center justify-center `}
+              className={`rounded-xl w-24 h-10 ${param.row.status === "returned" ? "bg-red-300" : "bg-red-400"} flex items-center justify-center cursor-pointer`}
             >
               renew
             </button>
@@ -52,7 +52,7 @@ export default function Checkouts() {
                 setOpen((prev) => ({ ...prev, historyBox: true }));
                 setSelectedCheckout(param.row);
               }}
-              className={`rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center `}
+              className={`rounded-xl w-24 h-10 bg-green-400 flex items-center justify-center cursor-pointer`}
             >
               History
             </button>
