@@ -22,6 +22,7 @@ A modern Library Management System built with React that helps manage books, mem
 
 🛠️ Tech Stack
 Frontend: React JS 
+State management : Context API
 Database: Firebase Realtime Database 
 UI Library: Material UI (MUI Data Grid) 
 Charts: Recharts 
@@ -33,6 +34,7 @@ Used Firebase Realtime Database for live data syncing
 Integrated MUI Data Grid for structured and scalable data display 
 Built data visualization dashboards using Recharts 
 Designed modular and reusable React components 
+used protected routes for only admin access
 
 📊 Analytics Dashboard
 📈 Track borrowed vs returned books
@@ -49,3 +51,5 @@ Implementing CRUD operations in real-world scenarios
 Building logic for overdue tracking & analytics 
 Integrating third-party libraries (MUI Data Grid, Recharts) 
 Structuring scalable frontend architecture 
+
+I WILL ADD MORE FEATURES IN THIS PROJECT (like role based authentication)
