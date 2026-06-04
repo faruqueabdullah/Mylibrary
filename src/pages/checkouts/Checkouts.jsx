@@ -64,12 +64,30 @@ export default function Checkouts() {
 
   const { checkOuts } = UseFirebaseContext(); // fetching checkOuts details
 
+  const dateObj = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
+// console.log(  new Date(checkOuts[0].dueDate).toLocaleDateString("en-IN", dateObj))
+
+  const updatedCheckOuts = checkOuts.map((data) => ({
+    ...data,
+    dueDate:new Date(data.dueDate).toLocaleDateString("en-IN", dateObj),
+    issueDate:new Date(data.issueDate).toLocaleDateString("en-IN", dateObj)
+  }));
+
+  // console.log(updatedCheckOuts)
+
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState({ renewBox: false, historyBox: false });
   const [newDueDate, setNewdueDate] = useState("");
   const [selectedCheckout, setSelectedCheckout] = useState(null);
 
-  const filterRow = checkOuts.filter(
+  // open.historyBox && console.log(selectedCheckout)
+
+  const filterRow = updatedCheckOuts.filter(
     (book) =>
       book.title.toLowerCase().includes(inputValue?.toLowerCase()) ||
       book.member.toLowerCase().includes(inputValue?.toLowerCase()) ||
@@ -87,6 +105,7 @@ export default function Checkouts() {
     const bookRef2 = doc(db, "checkouts", book.id);
     await updateDoc(bookRef2, {
       status: "returned",
+      returnDate:new Date().toISOString(),
       history: [
         ...book.history,
         { status: "returned", date: new Date().toISOString() },
@@ -109,12 +128,12 @@ export default function Checkouts() {
           status: "renewed",
           date: new Date(newDueDate).toISOString(),
         },
-        selectedCheckout.status === "returned"
-          ? {
-              status: "returned",
-              date: new Date().toISOString(),
-            }
-          : null,
+        // selectedCheckout.status === "returned"
+        //   ? {
+        //       status: "returned",
+        //       date: new Date().toISOString(),
+        //     }
+        //   : null,
       ],
     });
 
@@ -131,7 +150,9 @@ export default function Checkouts() {
           <h1 className="text-xl font-semibold">CheckOut Books</h1>
           <span className="text-sm">See borrow details</span>
         </div>
-        <div className={` border flex w-fit items-center h-10 px-4 rounded-full`}>
+        <div
+          className={` border flex w-fit items-center h-10 px-4 rounded-full`}
+        >
           <input
             type="text"
             className="border-0 outline-0"
@@ -146,8 +167,12 @@ export default function Checkouts() {
 
       {/* Renew Box */}
       {open.renewBox && (
-        <div className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0 p-1.5`}>
-          <div className={`${theme ? "bg-dark" : "bg-softwhite"} w-80 border rounded-xl p-3`}>
+        <div
+          className={`${theme ? "bg-dark/95" : "bg-softwhite/90"} flex justify-center items-center w-full h-full absolute left-0 top-0 p-1.5`}
+        >
+          <div
+            className={`${theme ? "bg-dark" : "bg-softwhite"} w-80 border rounded-xl p-3`}
+          >
             <h3 className="text-2xl text-center pb-3">Renew Book</h3>{" "}
             <p>
               <b>Book:</b> {selectedCheckout?.title}
@@ -176,7 +201,10 @@ export default function Checkouts() {
                   const newDate = new Date(newDueDate).toLocaleDateString(
                     "en-GB",
                   );
-                  const prevDate = selectedCheckout.dueDate;
+                  const prevDate = new Date(
+                    selectedCheckout.dueDate,
+                  ).toLocaleDateString("en-GB");
+
                   if (newDate <= prevDate) {
                     alert(
                       "The new date should be greater than the previous one.",
