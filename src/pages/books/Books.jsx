@@ -66,7 +66,7 @@ export default function Books() {
                 setIsEdit(true);
                 setBookDetails(params.row);
               }}
-              className="rounded-xl w-30 h-10 bg-gray-400 flex items-center justify-center"
+              className="rounded-xl w-30 h-10 bg-gray-400 flex items-center justify-center cursor-pointer"
             >
               Edit
             </button>
@@ -75,7 +75,7 @@ export default function Books() {
                 deleteBook(params.id);
                 // console.log(params.id)
               }}
-              className="rounded-xl w-30 h-10 bg-red-300 flex items-center justify-center"
+              className="rounded-xl w-30 h-10 bg-red-300 flex items-center justify-center cursor-pointer"
             >
               Delete
             </button>
@@ -84,7 +84,7 @@ export default function Books() {
                 setIssueBtnClicked(true);
                 setBookDetails(params.row);
               }}
-              className="rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center"
+              className="rounded-xl w-30 h-10 bg-green-400 flex items-center justify-center cursor-pointer"
             >
               Issue
             </button>
